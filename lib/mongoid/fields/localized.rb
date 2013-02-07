@@ -43,7 +43,9 @@ module Mongoid
       #
       # @since 2.3.0
       def mongoize(object)
-        { ::I18n.locale.to_s => type.mongoize(object) }
+        # { ::I18n.locale.to_s => type.mongoize(object) }
+        locale = ::I18n.respond_to?(:lang)? ::I18n.lang : ::I18n.locale
+        { locale.to_s => type.mongoize(object) }
       end
 
       private
@@ -61,7 +63,8 @@ module Mongoid
       #
       # @since 3.0.0
       def lookup(object)
-        locale = ::I18n.locale
+        # locale = ::I18n.locale
+        locale = ::I18n.respond_to?(:lang)? ::I18n.lang : ::I18n.locale
         if ::I18n.respond_to?(:fallbacks)
           object[::I18n.fallbacks[locale].map(&:to_s).find{ |loc| object[loc] }]
         else
